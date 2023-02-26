@@ -1,0 +1,12 @@
+.card-agent{
+    margin: auto;
+    width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.card-agent input, .card-agent label{
+    display: block;
+    margin-bottom: 20px;
+}

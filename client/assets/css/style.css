@@ -1,0 +1,27 @@
+body{
+    background-color: #f5f5f5;
+}
+.form-consommation{
+    margin: auto;
+    width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.form-consommation input, .form-consommation select{
+    display: block;
+    padding: 15px;
+    border-width: 0 0 2px;
+    margin-bottom: 10px;
+    border-bottom-color: #1490a8;
+}
+.form-consommation label{
+    color: #1490a8;
+    font-weight: bold;
+}
+
+
+.bill-status{
+    width: 70px;
+}
