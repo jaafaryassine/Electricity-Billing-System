@@ -1,4 +1,5 @@
 <?php
+require ("PDF.php");
 
 class Admin
 {
@@ -54,7 +55,7 @@ class Admin
 
     public function get_info_consommation_by_id($db,$id_consommation)
     {
-        $req=$db->prepare("SELECT * FROM consommations WHERE id_consommation=? LIMIT 1");
+        $req=$db->prepare("SELECT * FROM consommations,clients WHERE consommations.id_client=clients.id_client AND id_consommation=? LIMIT 1");
         $req->execute(array($id_consommation));
         $res=$req->fetch();
         return $res;
@@ -81,11 +82,31 @@ class Admin
         if ($insert){
             $update = $db->prepare("UPDATE consommations SET statut='valid' WHERE id_consommation=?");
             $update->execute(array($infos_cons["id_consommation"]));
+            $this->generate_pdf_bill($infos_cons,$price);
             return true;
         }
         else {
             return false;
         }
+    }
+
+    public function generate_pdf_bill($infos,$price)
+    {
+        $months_array = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"];
+        $pdf = new PDF();
+        // Define alias for number of pages
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $pdf->SetFont('Times','',14);
+
+        $pdf->Cell(0, 10, 'Client : '.$infos["first_name"]." ".$infos["last_name"], 0, 1);
+        $pdf->Cell(0, 10, utf8_decode('Quantité Consommée : '.$infos["qt_consommation"])." KWH", 0, 1);
+        $pdf->Cell(0, 10, 'Montant TTC : '.number_format($price,2,".","")." MAD", 0, 1);
+        $pdf->Cell(0, 10, 'Mois : '.$months_array[$infos["month"] - 1], 0, 1);
+        $pdf->Cell(0, 10, utf8_decode('Année : '.$infos["year"]), 0, 1);
+
+
+        $pdf->Output();
     }
 
     public function getStatistic($db){
@@ -103,12 +124,26 @@ class Admin
         $nb_bills = $res["nb_bills"];
         $req=$db->query("SELECT count(*) as nb_bills_paid FROM factures WHERE statut='paid'");
         $res=$req->fetch();
+        if ($nb_bills != 0)
         $statistics["bills_paid_percentage"] = $res["nb_bills_paid"]/$nb_bills * 100;
+        else $statistics["bills_paid_percentage"] = 0;
 
         $req=$db->query("SELECT count(*) as nb_reclamations FROM reclamations");
         $res=$req->fetch();
         $statistics["nb_reclamations"] = $res["nb_reclamations"];
         return $statistics;
+    }
+
+    public function update_client_information($db,$id_client,$new_infos)
+    {
+        $update = $db->prepare("UPDATE clients SET first_name=?,last_name=?,address=?,id_zone=? WHERE id_client=?");
+        $update->execute(array($new_infos["first_name"],$new_infos["last_name"],$new_infos["address"],$new_infos["id_zone"],$id_client));
+        if ($update) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

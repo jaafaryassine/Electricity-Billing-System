@@ -78,7 +78,7 @@ if (isset($_SESSION["admin"])) {
                                                 <td> <?=$client["address"]?></td>
                                                 <td><?=$client["name_zone"]?></td>
                                                 <td>
-                                                    <a href="profile.php">
+                                                    <a href="profile.php?id_client=<?=$client["id_client"]?>">
                                                         <button class="btn btn-outline-info">Infos clients</button>
                                                     </a>
                                                 </td>

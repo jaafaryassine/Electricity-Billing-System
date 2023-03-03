@@ -1,7 +1,7 @@
 <?php
 
 $months_array = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"];
-
+$zones = ["1" => " Zone 1","2" => " Zone 2","3" => " Zone 3","4" => " Zone 4"];
 function testLoginAdmin($db,$username,$password){
     $password_hashed = sha1($password);
     $req = $db->prepare("SELECT * FROM admin WHERE username=? AND password=? LIMIT 1");

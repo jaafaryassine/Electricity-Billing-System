@@ -7,7 +7,6 @@ if (isset($_SESSION["admin"])) {
     if ($_SESSION["admin"]) {
         $admin = new Admin();
         $all_consommations = $admin->get_all_consommations($db);
-
         if (isset($_POST["save_change"])){
             $id_consommation = trim(htmlspecialchars($_POST["save_change"]));
             $new_consommation = trim(htmlspecialchars($_POST["qt_consommation"]));
@@ -21,10 +20,7 @@ if (isset($_SESSION["admin"])) {
         if (isset($_POST["generate_bill"])){
             $id_cons = trim(htmlspecialchars($_POST["generate_bill"]));
             $info_cons = $admin->get_info_consommation_by_id($db,$id_cons);
-            if ($admin->generateBill($db,$info_cons)){
-                header("location:all-consommations.php");
-            }
-            else {
+            if (!$admin->generateBill($db,$info_cons)){
                 echo "Failed";
             }
         }
@@ -80,7 +76,7 @@ if (isset($_SESSION["admin"])) {
                                 </div>
                                 <div class="table-responsive table mt-2" id="dataTable" role="grid"
                                      aria-describedby="dataTable_info">
-                                    <table class="table my-0" id="dataTable">
+                                    <table class="table my-0" id="all-consommations">
                                         <thead>
                                         <tr>
                                             <th>Client</th>
@@ -188,10 +184,11 @@ if (isset($_SESSION["admin"])) {
         <script src="assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/js/bs-init.js"></script>
         <script src="assets/js/theme.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
         </body>
 
         </html>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
         <?php
     } else {
