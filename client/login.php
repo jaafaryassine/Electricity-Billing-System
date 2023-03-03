@@ -15,7 +15,7 @@ if(isset($_POST["login"])){
     }
 }
 
-if(!$_SESSION){
+if(!isset($_SESSION["email"])){
 ?>
 <!DOCTYPE html>
 <html lang="en">

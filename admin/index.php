@@ -5,6 +5,7 @@ session_start();
 if (isset($_SESSION["admin"])) {
     if ($_SESSION["admin"]) {
         $admin = new Admin();
+        $statisitics = $admin->getStatistic($db);
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -37,7 +38,7 @@ if (isset($_SESSION["admin"])) {
                                             <div class="col me-2">
                                                 <div class="text-uppercase text-danger fw-bold text-xs mb-1"><span>Non Payés</span>
                                                 </div>
-                                                <div class="text-dark fw-bold h5 mb-0"><span>35000 MAD</span></div>
+                                                <div class="text-dark fw-bold h5 mb-0"><span><?=number_format($statisitics["money_not_paid"],2,'.','')?> MAD</span></div>
                                             </div>
                                             <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300"></i>
                                             </div>
@@ -52,7 +53,7 @@ if (isset($_SESSION["admin"])) {
                                             <div class="col me-2">
                                                 <div class="text-uppercase text-info fw-bold text-xs mb-1"><span>Consommation / Mois</span>
                                                 </div>
-                                                <div class="text-dark fw-bold h5 mb-0"><span>302 MAD</span></div>
+                                                <div class="text-dark fw-bold h5 mb-0"><span><?=number_format($statisitics["avg_cons"],2,'.','')?> Kwh</span></div>
                                             </div>
                                             <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                                             </div>
@@ -69,15 +70,15 @@ if (isset($_SESSION["admin"])) {
                                                 </div>
                                                 <div class="row g-0 align-items-center">
                                                     <div class="col-auto">
-                                                        <div class="text-dark fw-bold h5 mb-0 me-3"><span>50%</span>
+                                                        <div class="text-dark fw-bold h5 mb-0 me-3"><span><?=number_format($statisitics["bills_paid_percentage"],2,'.','')?> %</span>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="progress progress-sm">
                                                             <div class="progress-bar bg-info" aria-valuenow="50"
                                                                  aria-valuemin="0" aria-valuemax="100"
-                                                                 style="width: 50%;"><span
-                                                                        class="visually-hidden">50%</span></div>
+                                                                 style="width: <?=$statisitics["bills_paid_percentage"]?>%;"><span
+                                                                        class="visually-hidden"><?=$statisitics["bills_paid_percentage"]?>%</span></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -95,7 +96,7 @@ if (isset($_SESSION["admin"])) {
                                             <div class="col me-2">
                                                 <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>Réclammation</span>
                                                 </div>
-                                                <div class="text-dark fw-bold h5 mb-0"><span>18</span></div>
+                                                <div class="text-dark fw-bold h5 mb-0"><span><?=$statisitics["nb_reclamations"]?></span></div>
                                             </div>
                                             <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i>
                                             </div>
