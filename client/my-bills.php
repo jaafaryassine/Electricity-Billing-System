@@ -7,6 +7,11 @@ session_start();
 if ($_SESSION["email"]) {
     $client = new Client($_SESSION);
     $all_bills = $client->get_all_bills($db);
+    if (isset($_POST["print_bill"])){
+        $id_bill = trim(htmlspecialchars($_POST["print_bill"]));
+        $info_bill = $client->get_info_bill_by_id($db,$id_bill);
+        $client->print_pdf_bill($info_bill);
+    }
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -68,7 +73,7 @@ if ($_SESSION["email"]) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="button" class="btn btn-primary">Imprimer facture</button>
+                        <form method="post"> <button type="submit" class="btn btn-primary" name="print_bill" value="<?=$bill["id_facture"]?>">Imprimer facture</button></form>
                     </div>
                 </div>
             </div>

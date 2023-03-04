@@ -30,7 +30,7 @@ if (isset($_SESSION["admin"])) {
                         <div class="d-sm-flex justify-content-between align-items-center mb-4">
                             <h3 class="text-dark mb-0">Clients</h3><a
                                     class="btn btn-primary btn-sm d-none d-sm-inline-block"
-                                    role="button" href="#"><i
+                                    role="button" href="add-client.php"><i
                                         class="fas fa-download fa-sm text-white-50"></i>&nbsp;Ajouter Client</a>
                         </div>
                         <div class="card shadow">

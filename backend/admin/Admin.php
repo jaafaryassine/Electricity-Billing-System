@@ -146,20 +146,46 @@ class Admin
         }
     }
 
-    public function get_all_reclamations($db,$statut)
+    public function get_not_answered_reclamations($db)
     {
-        $req = $db->prepare("SELECT * FROM reclamations, clients WHERE reclamations.id_client=clients.id_client AND statut = ?");
-        $req->execute(array($statut));
+        $req = $db->prepare("SELECT * FROM reclamations, clients WHERE reclamations.id_client=clients.id_client AND statut = 'not answered'");
+        $req->execute();
         $res=$req->fetchAll();
         return $res;
     }
 
+    public function get_answered_reclamations($db)
+    {
+        $req = $db->prepare("SELECT *,reclamations.message as client_msg,responses.message as answer FROM reclamations, clients, responses WHERE reclamations.id_client=clients.id_client AND reclamations.id_reclamation=responses.id_reclamation AND statut = 'answered'");
+        $req->execute();
+        $res=$req->fetchAll();
+        return $res;
+    }
     public function answer_recmlamation($db,$id_reclamation,$message)
     {
         $insert = $db->prepare("INSERT INTO responses (id_reclamation,message) VALUES (?,?)");
         $insert->execute(array($id_reclamation,$message));
+        $update = $db->prepare("UPDATE reclamations SET statut='answered' WHERE id_reclamation=?");
+        $update->execute(array($id_reclamation));
         if ($insert) return true;
         else return false;
     }
+
+    public function add_client($db,$last_name,$first_name,$email,$password,$address,$id_zone)
+    {
+        $req = $db->prepare("SELECT * FROM clients WHERE email=? LIMIT 1");
+        $req->execute(array($email));
+        $res=$req->fetch();
+        if ($res){
+            return false;
+        }
+        else {
+            $insert = $db->prepare("INSERT INTO clients (last_name,first_name,email,password,address,id_zone) VALUES (?,?,?,?,?,?)");
+            $insert->execute(array($last_name,$first_name,$email,sha1($password),$address,$id_zone));
+            return true;
+        }
+    }
+
+
 
 }

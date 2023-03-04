@@ -93,7 +93,7 @@ if (isset($_SESSION["admin"])) {
                                                 <td>
                                                     <?=$consommation["last_name"]." ".$consommation["first_name"]?>
                                                 </td>
-                                                <td> <?=$months_array[$consommation["month"]]." ".$consommation["year"]?></td>
+                                                <td> <?=$months_array[$consommation["month"]-1]." ".$consommation["year"]?></td>
                                                 <td><?=$consommation["qt_consommation"]?> Kwh</td>
                                                 <td><a href="#" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight<?=$consommation["id_consommation"]?>" aria-controls="offcanvasRight">
                                                         <img class="img-thumbnail img-compteur" width="50" src="../client/compteurs-img/<?=$consommation["id_consommation"]?>.png" />

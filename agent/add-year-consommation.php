@@ -20,7 +20,7 @@ if (isset($_SESSION["agent"])){
         <div class="card-agent mt-5">
             <form method="post" enctype="multipart/form-data">
                 <label for="input-file">Insérer le fichier de la consommation annuelle</label>
-                <input type="file" id="input-file" name="file_cons">
+                <input type="file" id="input-file" name="file_cons" required>
                 <button class="btn btn-primary float-end" name="add_file" type="submit">Enregistrer</button> <br/>
             </form>
         </div>
@@ -31,7 +31,7 @@ if (isset($_SESSION["agent"])){
         move_uploaded_file($_FILES["file_cons"]["tmp_name"],$upload);
         $infos = $agent->add_txt_file($db,$upload);
     ?>
-    <table class="table">
+    <table class="table mt-5">
         <thead>
         <tr>
             <th scope="col">ID Client</th>
