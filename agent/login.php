@@ -1,3 +1,16 @@
+<?php
+require("../backend/connect_db.php");
+require ("../backend/agent/functions.php");
+session_start();
+if (!isset($_SESSION["agent"])){
+    if (isset($_POST["login"])){
+        $username = trim(htmlspecialchars($_POST["username"]));
+        $password = htmlspecialchars($_POST["password"]);
+        if (testLoginAgent($db,$username,$password))
+            header("location:add-year-consommation.php");
+        else echo "FAILED";
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,14 +38,14 @@
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Espace Agent</h4>
                                     </div>
-                                    <form class="user">
-                                        <div class="mb-3"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Nom d'utilisateur" name="username"></div>
+                                    <form class="user" method="post">
+                                        <div class="mb-3"><input class="form-control form-control-user" type="text" id="exampleInputEmail" placeholder="Nom d'utilisateur" name="username"></div>
                                         <div class="mb-3"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Mot de passe" name="password"></div>
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox small">
                                                 <div class="form-check"><input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1"><label class="form-check-label custom-control-label" for="formCheck-1">Remember Me</label></div>
                                             </div>
-                                        </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Se connecter</button>
+                                        </div><button class="btn btn-primary d-block btn-user w-100" type="submit" name="login">Se connecter</button>
                                         <hr>
                                     </form>
                                 </div>
@@ -49,3 +62,10 @@
 </body>
 
 </html>
+
+<?php
+}
+else {
+    header("location:add-year-consommation.php");
+}
+?>

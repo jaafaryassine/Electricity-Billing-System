@@ -146,4 +146,20 @@ class Admin
         }
     }
 
+    public function get_all_reclamations($db,$statut)
+    {
+        $req = $db->prepare("SELECT * FROM reclamations, clients WHERE reclamations.id_client=clients.id_client AND statut = ?");
+        $req->execute(array($statut));
+        $res=$req->fetchAll();
+        return $res;
+    }
+
+    public function answer_recmlamation($db,$id_reclamation,$message)
+    {
+        $insert = $db->prepare("INSERT INTO responses (id_reclamation,message) VALUES (?,?)");
+        $insert->execute(array($id_reclamation,$message));
+        if ($insert) return true;
+        else return false;
+    }
+
 }
