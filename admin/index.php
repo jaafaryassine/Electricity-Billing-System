@@ -144,54 +144,16 @@ if (isset($_SESSION["admin"])) {
                         <div class="row">
                             <div class="col">
                                 <div class="row">
+                                    <?php foreach ($statisitics["avg_by_zone"] as $arr) { ?>
                                     <div class="col-lg-6 mb-4">
                                         <div class="card text-white bg-primary shadow">
                                             <div class="card-body">
-                                                <p class="m-0">Zone 1</p>
-                                                <p class="text-white-50 small m-0">259 MAD</p>
+                                                <p class="m-0"><?=$arr["name_zone"]?></p>
+                                                <p class="text-white-50 small m-0"><?=$arr["qt"]?> KWH</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card text-white bg-success shadow">
-                                            <div class="card-body">
-                                                <p class="m-0">Zone 2</p>
-                                                <p class="text-white-50 small m-0">329 MAD</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card text-white bg-info shadow">
-                                            <div class="card-body">
-                                                <p class="m-0">Zone 3</p>
-                                                <p class="text-white-50 small m-0">267 MAD</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card text-white bg-warning shadow">
-                                            <div class="card-body">
-                                                <p class="m-0">Zone 4</p>
-                                                <p class="text-white-50 small m-0">220 MAD</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card text-white bg-danger shadow">
-                                            <div class="card-body">
-                                                <p class="m-0">Zone 5</p>
-                                                <p class="text-white-50 small m-0">402 MAD</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card text-white bg-secondary shadow">
-                                            <div class="card-body">
-                                                <p class="m-0">Zone 6</p>
-                                                <p class="text-white-50 small m-0">299 MAD</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="col-lg-6 mb-4">
@@ -201,17 +163,17 @@ if (isset($_SESSION["admin"])) {
                                     </div>
                                     <div class="card-body">
                                         <h4 class="small fw-bold">Réclammation satisfaite<span
-                                                    class="float-end">20%</span></h4>
+                                                    class="float-end"><?=number_format($statisitics["nb_reclamations_answered"],2,".","")?>%</span></h4>
                                         <div class="progress mb-4">
                                             <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span>
+                                                 aria-valuemax="100" style="width: <?=number_format($statisitics["nb_reclamations_answered"],2,".","")?>%;"><span class="visually-hidden"><?=number_format($statisitics["nb_reclamations_answered"],2,".","")?>%</span>
                                             </div>
                                         </div>
                                         <h4 class="small fw-bold">Réclammation non répondus<span
-                                                    class="float-end">40%</span></h4>
+                                                    class="float-end"><?=number_format(100-$statisitics["nb_reclamations_answered"],2,".","")?>%</span></h4>
                                         <div class="progress mb-4">
                                             <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: 40%;"><span class="visually-hidden">40%</span>
+                                                 aria-valuemax="100" style="width: <?=100-number_format($statisitics["nb_reclamations_answered"],2,".","")?>%;"><span class="visually-hidden"><?=number_format(100-$statisitics["nb_reclamations_answered"],2,".","")?>%</span>
                                             </div>
                                         </div>
                                     </div>

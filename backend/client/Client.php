@@ -32,7 +32,7 @@ class Client
         if ($qt_consommation <= 100){
             $unit_price = 0.91;
         }
-        elseif ($qt_consommation >= 101 && $qt_consommation<= 200){
+        elseif ($qt_consommation > 100 && $qt_consommation<= 200){
             $unit_price = 1.01;
         }
         else{
@@ -98,6 +98,35 @@ class Client
         $pdf->Cell(0, 10, utf8_decode('Année : '.$infos["year"]), 0, 1);
 
         $pdf->Output();
+    }
+
+    public function get_answered_reclamations($db)
+    {
+        $req = $db->prepare("SELECT *,reclamations.message as client_msg,responses.message as answer FROM reclamations, responses WHERE reclamations.id_reclamation=responses.id_reclamation AND statut = 'answered' AND id_client=?");
+        $req->execute(array($this->id));
+        $res=$req->fetchAll();
+        return $res;
+    }
+    public function get_not_answered_reclamations($db)
+    {
+        $req = $db->prepare("SELECT * FROM reclamations WHERE statut = 'not answered' AND id_client=?");
+        $req->execute(array($this->id));
+        $res=$req->fetchAll();
+        return $res;
+    }
+
+    public function update_password($db,$old_password,$new_password)
+    {
+        $req= $db->prepare("SELECT password FROM clients WHERE id_client=?");
+        $req->execute(array($this->id));
+        $res = $req->fetch();
+        if (sha1($old_password)==$res["password"]){
+            $update = $db->prepare("UPDATE clients SET password=? WHERE id_client=?");
+            $update->execute(array(sha1($new_password),$this->id));
+            if ($update) return true;
+            else return false;
+        }
+        else return false;
     }
 
 }

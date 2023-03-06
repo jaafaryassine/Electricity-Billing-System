@@ -125,12 +125,25 @@ class Admin
         $req=$db->query("SELECT count(*) as nb_bills_paid FROM factures WHERE statut='paid'");
         $res=$req->fetch();
         if ($nb_bills != 0)
-        $statistics["bills_paid_percentage"] = $res["nb_bills_paid"]/$nb_bills * 100;
+            $statistics["bills_paid_percentage"] = $res["nb_bills_paid"]/$nb_bills * 100;
         else $statistics["bills_paid_percentage"] = 0;
 
         $req=$db->query("SELECT count(*) as nb_reclamations FROM reclamations");
         $res=$req->fetch();
+        $tot_reclamations = $res["nb_reclamations"];
         $statistics["nb_reclamations"] = $res["nb_reclamations"];
+
+        $req=$db->query("SELECT name_zone,AVG(qt_consommation) as qt FROM consommations,zones_geo,clients
+        WHERE zones_geo.id_zone=clients.id_zone AND consommations.id_client=clients.id_client group by name_zone");
+        $res = $req->fetchAll();
+        $statistics["avg_by_zone"] = $res;
+
+        $req=$db->query("SELECT count(*) as nb_answered FROM reclamations WHERE statut='answered'");
+        $res=$req->fetch();
+        if ($tot_reclamations!=0)
+            $statistics["nb_reclamations_answered"] = $res["nb_answered"]/$tot_reclamations * 100;
+        else $statistics["nb_reclamations_answered"] = 0;
+
         return $statistics;
     }
 
@@ -184,6 +197,57 @@ class Admin
             $insert->execute(array($last_name,$first_name,$email,sha1($password),$address,$id_zone));
             return true;
         }
+    }
+
+    public function get_annual_verification($db,$year)
+    {
+        $req = $db->prepare("SELECT id_yearly_cons,clients.id_client, first_name, last_name, SUM(consommations.qt_consommation) as qt_client,
+        yearly_cons.qt_consommation as qt_agent FROM clients,consommations,yearly_cons 
+        WHERE yearly_cons.statut='untreated' AND consommations.year=? AND yearly_cons.year=? AND clients.id_client=yearly_cons.id_client 
+        AND clients.id_client=consommations.id_client group by clients.id_client");
+        $req->execute(array($year,$year));
+        $res=$req->fetchAll();
+        return $res;
+    }
+
+    public function tolerate_verification($db,$id_yearly_cons)
+    {
+        $update = $db->prepare("UPDATE yearly_cons SET statut=? WHERE id_yearly_cons=?");
+        $update->execute(array('tolerated',$id_yearly_cons));
+        if ($update) return true;
+        else return false;
+    }
+
+    public function consider_verification($db,$info_cons,$year)
+    {
+        $data_cons = explode(",",$info_cons);
+        $update = $db->prepare("UPDATE yearly_cons SET statut=? WHERE id_yearly_cons=?");
+        $update->execute(array('considered',$data_cons[0]));
+        if ($update) {
+            $insert = $db->prepare("INSERT INTO annual_difference (id_client,year,difference) VALUES (?,?,?)");
+            $insert->execute(array($data_cons[1],$year,$data_cons[2]));
+            return true;
+        }
+        else return false;
+    }
+
+    public function get_info_yearly_cons_by_id($db,$id_yearly_cons)
+    {
+        $req = $db->prepare("SELECT * FROM yearly_cons WHERE id_yearly_cons=?");
+        $req->execute(array($id_yearly_cons));
+        $res=$req->fetch();
+        return $res;
+    }
+
+    public function search_by_name($db,$full_name)
+    {
+        $full_name_arr = explode(" ",$full_name);
+        if (count($full_name_arr)>=2){
+            $first_name = $full_name_arr[0];
+            $last_name = $full_name_arr[1];
+        }
+        $req=$db->prepare("SELECT * FROM clients WHERE first_name=? AND last_name=?");
+        $req->execute(array(explode(" ",$full_name)[0],explode(" ",$full_name)[1]));
     }
 
 

@@ -62,8 +62,6 @@ if (isset($_SESSION["admin"])) {
                     <?php require("./layouts/navbar.html") ?>
                     <div class="container-fluid">
                         <h3 class="text-dark mb-4">Profile</h3>
-                        <div class="row mb-3">
-                            <div class="col-lg-8 client-infos">
                                 <div class="row">
                                     <div class="col">
                                         <div class="card shadow mb-3">
@@ -108,30 +106,6 @@ if (isset($_SESSION["admin"])) {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 clients-stats">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="text-primary fw-bold m-0">Statistiques de Paiement de factures</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <h4 class="small fw-bold">Factures Payées<span class="float-end">80%</span></h4>
-                                        <div class="progress progress-sm mb-3">
-                                            <div class="progress-bar bg-success" aria-valuenow="80" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: 80%;"><span class="visually-hidden">20%</span>
-                                            </div>
-                                        </div>
-                                        <h4 class="small fw-bold">Factures Non Payées<span class="float-end">20%</span>
-                                        </h4>
-                                        <div class="progress progress-sm mb-3">
-                                            <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">40%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="card shadow clients-bills">
                             <div class="card-header py-3">
                                 <p class="text-primary m-0 fw-bold">Factures</p>
@@ -195,7 +169,7 @@ if (isset($_SESSION["admin"])) {
                                                 <a class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#cons<?=$consommation["id_consommation"]?>"> Intervenir </a>
                                             </td>
                                             <td>
-                                                <form method="post"> <button class="btn btn-sm btn-outline-success" name="generate_bill" value="<?=$consommation["id_consommation"]?>"> Génerer facture</button></form>
+                                                <form method="post"> <button class="btn btn-sm btn-outline-success" name="generate_bill" value="<?=$consommation["id_consommation"]?>"> Valider et Génerer facture</button></form>
                                             </td>
                                             </tr>
                                     <?php } ?>

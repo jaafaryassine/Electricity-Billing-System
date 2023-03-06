@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION){
+if (isset($_SESSION["id_client"])){
     header("location:my-bills.php");
 }
 else{

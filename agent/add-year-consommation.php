@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 require("../backend/connect_db.php");
 require ("../backend/agent/functions.php");
@@ -30,6 +31,7 @@ if (isset($_SESSION["agent"])){
         $upload = "../backend/agent/txt-files/".$agent->id.".txt";
         move_uploaded_file($_FILES["file_cons"]["tmp_name"],$upload);
         $infos = $agent->add_txt_file($db,$upload);
+        $nb = count($infos);
     ?>
     <table class="table mt-5">
         <thead>
@@ -40,12 +42,16 @@ if (isset($_SESSION["agent"])){
         </tr>
         </thead>
         <tbody>
+        <?php for($i=0;$i<$nb;$i++){ ?>
         <tr>
-            <td><?=$infos[0]?></td>
-            <td><?=$infos[2]?></td>
-            <td><?=$infos[1]?> KWH</td>
+            <td><?=$infos[$i][0]?></td>
+            <td><?=$infos[$i][2]?></td>
+            <td><?=$infos[$i][1]?> KWH</td>
         </tr>
-
+            <script>
+                swal("Félicitations ! ", "Client bien ajouté", "success");
+            </script>
+        <?php } ?>
         </tbody>
     </table>
         <?php } ?>

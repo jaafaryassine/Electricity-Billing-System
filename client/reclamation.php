@@ -1,3 +1,5 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <?php
 require ("../backend/connect_db.php");
 require("../backend/client/functions.php");
@@ -10,11 +12,17 @@ if($_SESSION["email"]){
         $objet = trim(htmlspecialchars($_POST["objet"]));
         $msg = trim(htmlspecialchars($_POST["message"]));
         if($client->send_reclamation($db,$objet,$msg)){
-            echo "sent succesfully";
-        }
-        else{
-            echo "Failed";
-        }
+            echo "<span></span>"
+            ?>
+            <script>
+                swal("Félicitations ! ", "Réclamation bien ajouté", "success");
+            </script>
+        <?php }
+        else{ ?>
+            <script>
+                swal("Erreur! ", "Réessayez plus tard", "error");
+            </script>
+        <?php }
     }
     ?>
 <!DOCTYPE html>

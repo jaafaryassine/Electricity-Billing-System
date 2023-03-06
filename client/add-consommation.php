@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 require ("../backend/connect_db.php");
 require("../backend/client/functions.php");
@@ -16,12 +17,17 @@ if($_SESSION["email"]){
             $last_id = $db->lastInsertId();
             $upload = "compteurs-img/".$last_id.".png";
             if (move_uploaded_file($_FILES["img-compteur"]["tmp_name"],$upload)){
-                echo "added succesfully";
-            }
+                echo "<span></span>" ?>
+                <script>
+                    swal("Félicitations ! ", "Consommation bien ajouté", "success");
+                </script>
+            <?php }
         }
-        else{
-            echo "Failed";
-        }
+        else{ ?>
+            <script>
+                swal("Erreur! ", "Réessayez plus tard", "error");
+            </script>
+       <?php }
     }
     ?>
 <!DOCTYPE html>

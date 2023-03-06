@@ -54,26 +54,6 @@ if (isset($_SESSION["admin"])) {
                                 <p class="text-primary m-0 fw-bold">Informations des consommations</p>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6 text-nowrap">
-                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                            <label
-                                                class="form-label">Show&nbsp;<select
-                                                    class="d-inline-block form-select form-select-sm">
-                                                    <option value="10" selected="">10</option>
-                                                    <option value="25">25</option>
-                                                    <option value="50">50</option>
-                                                    <option value="100">100</option>
-                                                </select>&nbsp;</label></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label
-                                                class="form-label"><input type="search"
-                                                                          class="form-control form-control-sm"
-                                                                          aria-controls="dataTable"
-                                                                          placeholder="Search"></label></div>
-                                    </div>
-                                </div>
                                 <div class="table-responsive table mt-2" id="dataTable" role="grid"
                                      aria-describedby="dataTable_info">
                                     <table class="table my-0" id="all-consommations">
@@ -103,33 +83,12 @@ if (isset($_SESSION["admin"])) {
                                                     <a class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#cons<?=$consommation["id_consommation"]?>"> Intervenir</a>
                                                 </td>
                                                 <td>
-                                                    <form method="post"> <button class="btn btn-sm btn-outline-success" name="generate_bill" value="<?=$consommation["id_consommation"]?>"> Génerer facture</button></form>
+                                                    <form method="post"> <button class="btn btn-sm btn-outline-success" name="generate_bill" value="<?=$consommation["id_consommation"]?>"> Valider et Génerer facture</button></form>
                                                 </td>
                                             </tr>
                                         <?php } ?>
                                         </tbody>
                                     </table>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 align-self-center">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                            <ul class="pagination">
-                                                <li class="page-item disabled"><a class="page-link"
-                                                                                  aria-label="Previous"
-                                                                                  href="#"><span
-                                                            aria-hidden="true">«</span></a>
-                                                </li>
-                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" aria-label="Next"
-                                                                         href="#"><span
-                                                            aria-hidden="true">»</span></a></li>
-                                            </ul>
-                                        </nav>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +122,7 @@ if (isset($_SESSION["admin"])) {
                     <!-- Offcanvas -->
                     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight<?=$consommation["id_consommation"]?>" aria-labelledby="offcanvasRightLabel">
                         <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasRightLabel">Image du compteur<?= $consommation["id_consommation"] ?></h5>
+                            <h5 class="offcanvas-title" id="offcanvasRightLabel">Image du compteur</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
