@@ -17,9 +17,19 @@ class Client
         $this->email = $arr_session["email"];
     }
 
+    public function get_difference_consommation($db,$year,$month,$qt)
+    {
+        $req=$db->prepare("SELECT qt_consommation FROM consommations WHERE year=? AND month=? AND id_client=? LIMIT 1");
+        $req->execute(array($year,$month - 1,$this->id));
+        $res=$req->fetch();
+        if ($res)
+            return $qt - $res["qt_consommation"];
+        else return $qt;
+    }
     public function add_consommation($db,$qt_consommation,$month,$year)
     {
-        if ($qt_consommation >= 50 && $qt_consommation<=400)
+        $difference_cons = $this->get_difference_consommation($db,$year,$month,$qt_consommation);
+        if ($difference_cons>= 50 && $difference_cons<=400)
             $statut = "valid";
 
         else $statut = "not valid";
@@ -29,28 +39,22 @@ class Client
         $id_consommation = $db->lastInsertId();
 
         // Calculate Price
-        if ($qt_consommation <= 100){
+        if ($difference_cons <= 100){
             $unit_price = 0.91;
         }
-        elseif ($qt_consommation > 100 && $qt_consommation<= 200){
+        elseif ($difference_cons > 100 && $difference_cons<= 200){
             $unit_price = 1.01;
         }
         else{
             $unit_price = 1.12;
         }
         $tva = 0.14;
-        $price = $qt_consommation* $unit_price * (1 + $tva);
+        $price = $difference_cons* $unit_price * (1 + $tva);
 
         // Adding to database
-        if ($qt_consommation >= 50 && $qt_consommation<=400)
+        if ($difference_cons >= 50 && $difference_cons<=400) {
             $insert = $db->prepare("INSERT INTO factures (prix,month,year,id_client,id_consommation) VALUES (?,?,?,?,?)");
-            $insert->execute(array($price,$month,$year,$this->id,$id_consommation));
-
-        if($insert){
-            return true;
-        }
-        else{
-            return false;
+            $insert->execute(array($price, $month, $year, $this->id, $id_consommation));
         }
     }
 
@@ -82,17 +86,33 @@ class Client
         }
     }
 
-    public function print_pdf_bill($infos)
+    public function print_pdf_bill($db,$infos)
     {
+        // Get difference consommation
+        $difference_cons = $this->get_difference_consommation($db,$infos["year"],$infos["month"],$infos["qt_consommation"]);
         $months_array = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"];
-        $pdf = new PDF();
-        // Define alias for number of pages
-        $pdf->AliasNbPages();
+        $pdf = new Fpdf();
+
+        $pdf->SetAutoPageBreak(false);
         $pdf->AddPage();
-        $pdf->SetFont('Times','',14);
+
+        // Ajout de la couleur et des styles
+        $pdf->SetFillColor(226, 188, 156);
+        $pdf->SetFont('Helvetica', 'B', 16);
+
+        // En-tête de la facture
+        $pdf->Cell(0, 30, utf8_decode("FACTURE D'ELECTRICITÉ"), 0, 1, 'C', true);
+        $pdf->Ln(20);
+
+        // Informations sur le client
+        $pdf->SetFont('Helvetica', 'B', 12);
+        $pdf->SetTextColor(44, 62, 80);
+        $pdf->Cell(0, 10, utf8_decode("Informations du client"), 0, 1, 'L');
+        $pdf->SetFont('Helvetica', '', 10);
+        $pdf->SetTextColor(52, 73, 94);
 
         $pdf->Cell(0, 10, 'Client : '.$this->first_name." ".$this->last_name, 0, 1);
-        $pdf->Cell(0, 10, utf8_decode('Quantité Consommée : '.$infos["qt_consommation"])." KWH", 0, 1);
+        $pdf->Cell(0, 10, utf8_decode('Quantité Consommée : '.$difference_cons)." KWH", 0, 1);
         $pdf->Cell(0, 10, 'Montant TTC : '.number_format($infos["prix"],2,".","")." MAD", 0, 1);
         $pdf->Cell(0, 10, 'Mois : '.$months_array[$infos["month"] - 1], 0, 1);
         $pdf->Cell(0, 10, utf8_decode('Année : '.$infos["year"]), 0, 1);

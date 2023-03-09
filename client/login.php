@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 include "../backend/connect_db.php";
 include "../backend/client/functions.php";
@@ -10,9 +11,12 @@ if(isset($_POST["login"])){
     if (testLoginClient($db,$email,$password)){
         header("location:my-bills.php");
     }
-    else{
-        echo "sjjs";
-    }
+    else{ ?>
+        <span></span>
+        <script>
+            swal("Erreur ! ", "Email ou mot de passe incorect", "error");
+        </script>
+    <?php }
 }
 
 if(!isset($_SESSION["email"])){

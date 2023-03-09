@@ -12,7 +12,7 @@ if (isset($_SESSION["admin"])) {
             $id_rec = trim(htmlspecialchars($_POST["answer"]));
             $msg = trim(htmlspecialchars($_POST["msg-response"]));
             if ($admin->answer_recmlamation($db,$id_rec,$msg))
-                header("Refresh::0");
+                header("location:reclamations.php?type=not_answered");
             else echo "FAILED";
         }
         ?>

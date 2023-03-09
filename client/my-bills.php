@@ -10,7 +10,7 @@ if ($_SESSION["email"]) {
     if (isset($_POST["print_bill"])){
         $id_bill = trim(htmlspecialchars($_POST["print_bill"]));
         $info_bill = $client->get_info_bill_by_id($db,$id_bill);
-        $client->print_pdf_bill($info_bill);
+        $client->print_pdf_bill($db,$info_bill);
     }
     ?>
     <!DOCTYPE html>

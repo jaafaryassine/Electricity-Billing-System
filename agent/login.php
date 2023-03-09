@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 require("../backend/connect_db.php");
 require ("../backend/agent/functions.php");
@@ -8,7 +9,12 @@ if (!isset($_SESSION["agent"])){
         $password = htmlspecialchars($_POST["password"]);
         if (testLoginAgent($db,$username,$password))
             header("location:add-year-consommation.php");
-        else echo "FAILED";
+        else{ ?>
+            <span></span>
+            <script>
+                swal("Erreur ! ", "Username ou mot de passe incorect", "error");
+            </script>
+        <?php }
     }
 ?>
 <!DOCTYPE html>

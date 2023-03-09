@@ -7,6 +7,7 @@ if (isset($_SESSION["admin"])) {
     if ($_SESSION["admin"]) {
         $admin = new Admin();
         $all_consommations = $admin->get_all_consommations($db);
+        $all_consommations_valid = $admin->get_all_consommations_valid($db);
         if (isset($_POST["save_change"])){
             $id_consommation = trim(htmlspecialchars($_POST["save_change"]));
             $new_consommation = trim(htmlspecialchars($_POST["qt_consommation"]));
@@ -23,6 +24,24 @@ if (isset($_SESSION["admin"])) {
             if (!$admin->generateBill($db,$info_cons)){
                 echo "Failed";
             }
+        }
+        if (isset($_POST["display_bill"])){
+            $id_cons = trim(htmlspecialchars($_POST["display_bill"]));
+            $infos_cons = $admin->get_info_consommation_by_id($db,$id_cons);
+            $difference_cons = $admin->get_difference_consommation($db,$infos_cons["year"],$infos_cons["month"],$infos_cons["qt_consommation"],$infos_cons["id_client"]);
+            // Calculate Price
+            if ($difference_cons <= 100){
+                $unit_price = 0.91;
+            }
+            elseif ($difference_cons >= 101 && $difference_cons <= 200){
+                $unit_price = 1.01;
+            }
+            else{
+                $unit_price = 1.12;
+            }
+            $tva = 0.14;
+            $price = $difference_cons* $unit_price * (1 + $tva);
+            $admin->generate_pdf_bill($infos_cons,$price);
         }
         ?>
         <!DOCTYPE html>
@@ -91,6 +110,55 @@ if (isset($_SESSION["admin"])) {
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card shadow mt-5">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 fw-bold">Factures</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive table mt-2" id="dataTable" role="grid"
+                                     aria-describedby="dataTable_info">
+                                    <table class="table my-0" id="all-consommations">
+                                        <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Période</th>
+                                            <th>Prix</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($all_consommations_valid as $consommation){
+                                            // Calculate Price
+                                            $difference_cons = $admin->get_difference_consommation($db,$consommation["year"],$consommation["month"],$consommation["qt_consommation"],$consommation["id_client"]);
+                                            if ($difference_cons<= 100){
+                                                $unit_price = 0.91;
+                                            }
+                                            elseif ($difference_cons >= 101 && $difference_cons<= 200){
+                                                $unit_price = 1.01;
+                                            }
+                                            else{
+                                                $unit_price = 1.12;
+                                            }
+                                            $tva = 0.14;
+                                            $price = $difference_cons* $unit_price * (1 + $tva);
+                                            ?>
+                                            <tr>
+                                                <td>
+                                                    <?=$consommation["last_name"]." ".$consommation["first_name"]?>
+                                                </td>
+                                                <td> <?=$months_array[$consommation["month"]-1]." ".$consommation["year"]?></td>
+                                                <td><?=$price?> MAD</td>
+                                                <td>
+                                                    <form method="post"> <button class="btn btn-sm btn-outline-success" name="display_bill" value="<?=$consommation["id_consommation"]?>"> Voir facture</button></form>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

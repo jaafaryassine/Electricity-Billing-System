@@ -1,3 +1,4 @@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 include "../backend/connect_db.php";
 include "../backend/admin/functions.php";
@@ -10,9 +11,12 @@ if(isset($_POST["login"])){
     if (testLoginAdmin($db,$username,$password)){
         header("location:index.php");
     }
-    else{
-        echo "sjjs";
-    }
+    else{ ?>
+        <span></span>
+        <script>
+            swal("Erreur ! ", "Username ou mot de passe incorect", "error");
+        </script>
+    <?php }
 }
 
 if(!$_SESSION || !isset($_SESSION["admin"])){

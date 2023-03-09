@@ -78,7 +78,7 @@ if (isset($_SESSION["admin"])) {
                                         <tbody>
                                         <?php foreach ($data as $client){
                                             if (abs($client["qt_client"] - $client["qt_agent"]) > 100){
-                                                $info_cons = $client["id_yearly_cons"].",".$client["id_client"].",".abs($client["qt_client"] - $client["qt_agent"]);
+                                                $info_cons = $client["id_yearly_cons"].",".$client["id_client"].",".($client["qt_client"] - $client["qt_agent"]);
                                                 ?>
                                             <tr>
                                                 <td>

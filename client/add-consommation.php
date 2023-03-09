@@ -13,22 +13,15 @@ if($_SESSION["email"]){
         $month = trim(htmlspecialchars($_POST["month"]));
         $year = trim(htmlspecialchars($_POST["year"]));
         $img_compteur = $_FILES["img-compteur"]["name"];
-        if($client->add_consommation($db,$qt_consommation,$month,$year)){
+        $client->add_consommation($db,$qt_consommation,$month,$year);
             $last_id = $db->lastInsertId();
             $upload = "compteurs-img/".$last_id.".png";
-            if (move_uploaded_file($_FILES["img-compteur"]["tmp_name"],$upload)){
+            move_uploaded_file($_FILES["img-compteur"]["tmp_name"],$upload);
                 echo "<span></span>" ?>
                 <script>
                     swal("Félicitations ! ", "Consommation bien ajouté", "success");
                 </script>
             <?php }
-        }
-        else{ ?>
-            <script>
-                swal("Erreur! ", "Réessayez plus tard", "error");
-            </script>
-       <?php }
-    }
     ?>
 <!DOCTYPE html>
 <html lang="en">
